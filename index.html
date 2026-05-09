@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RACI — Collaborative Matrix</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script>
+    // Apply saved theme before paint to avoid flash
+    (function () {
+      try {
+        var t = localStorage.getItem("raci.theme") || "dark";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (_) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/">
+      <span class="brand-mark"></span>
+      <span class="brand-name">RACI<small>collab</small></span>
+    </a>
+    <div id="presence" class="presence" aria-label="Online users"></div>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+      <span class="icon-moon">🌙</span>
+      <span class="icon-sun">☀️</span>
+    </button>
+    <button id="shareBtn" class="btn btn-ghost hidden" type="button">Share</button>
+  </header>
+
+  <main id="view"></main>
+
+  <!-- Landing template -->
+  <template id="tpl-landing">
+    <section class="landing">
+      <h1>Build your RACI matrix together.</h1>
+      <p class="lead">Add roles &amp; activities, then drag <em>Accountable</em>, <em>Responsible</em>, and <em>Consulted</em> markers into cells. Share a QR code to collaborate live.</p>
+      <div class="cta-row">
+        <button id="createBoard" class="btn btn-primary">Create new board</button>
+        <form id="joinForm" class="join">
+          <input id="joinId" type="text" placeholder="Paste board ID or URL" autocomplete="off" />
+          <button class="btn" type="submit">Join</button>
+        </form>
+      </div>
+      <div class="legend-preview" aria-hidden="true">
+        <span class="chip chip-A">A</span> Accountable
+        <span class="chip chip-R">R</span> Responsible
+        <span class="chip chip-C">C</span> Consulted
+      </div>
+    </section>
+  </template>
+
+  <!-- Board template -->
+  <template id="tpl-board">
+    <section class="board">
+      <div class="board-head">
+        <input id="boardTitle" class="board-title" type="text" placeholder="Untitled RACI board" />
+        <div class="palette" aria-label="Marker palette">
+          <button class="swatch swatch-A" draggable="true" data-type="A" title="Accountable">A</button>
+          <button class="swatch swatch-R" draggable="true" data-type="R" title="Responsible">R</button>
+          <button class="swatch swatch-C" draggable="true" data-type="C" title="Consulted">C</button>
+          <span class="palette-hint">Drag into a cell</span>
+          <span id="trash" class="trash" title="Drop here to remove">🗑</span>
+        </div>
+      </div>
+      <div class="grid-wrap">
+        <table id="raciGrid" class="raci-grid" aria-label="RACI matrix"></table>
+      </div>
+      <p class="legend">
+        <span class="chip chip-A">A</span> Accountable
+        <span class="chip chip-R">R</span> Responsible
+        <span class="chip chip-C">C</span> Consulted
+        <span class="muted"> · click a marker to remove · click headers to rename</span>
+      </p>
+    </section>
+  </template>
+
+  <!-- Share modal -->
+  <div id="shareModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="modal-card">
+      <button class="modal-close" id="shareClose" aria-label="Close">×</button>
+      <h2 id="shareTitle">Invite collaborators</h2>
+      <div id="qrcode" class="qrcode"></div>
+      <label class="field">
+        <span>Share URL</span>
+        <input id="shareUrl" type="text" readonly />
+      </label>
+      <label class="field">
+        <span>Board ID</span>
+        <input id="shareId" type="text" readonly />
+      </label>
+      <button id="shareCopy" class="btn btn-primary">Copy URL</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <footer class="site-footer">
+    Powered by
+    <a href="https://www.tertiarycourses.com.sg/" target="_blank" rel="noopener noreferrer">Tertiary Infotech Academy Pte Ltd</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
